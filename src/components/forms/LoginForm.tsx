@@ -8,6 +8,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { loginAction } from "@/app/auth/login/actions";
 import { INITIAL_ACTION_STATE, fieldError } from "@/lib/action-state";
 import { Alert } from "@/components/ui/Alert";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -38,6 +39,35 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
   );
 
   const [showPassword, setShowPassword] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState("");
+
+  async function handleGoogleLogin() {
+    setGoogleLoading(true);
+    setGoogleError("");
+
+    const supabase = createSupabaseBrowserClient();
+
+    const callbackUrl =
+      `${window.location.origin}/auth/callback?next=/onboarding`;
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: callbackUrl,
+        queryParams: {
+          prompt: "select_account",
+        },
+      },
+    });
+
+    if (error) {
+      setGoogleError(
+        "No fue posible iniciar sesión con Google. Intenta nuevamente."
+      );
+      setGoogleLoading(false);
+    }
+  }
 
   return (
     <form action={formAction} className="space-y-5" noValidate>
@@ -49,6 +79,10 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 
       {state.status === "error" && state.message && (
         <Alert variant="error">{state.message}</Alert>
+      )}
+
+      {googleError && (
+        <Alert variant="error">{googleError}</Alert>
       )}
 
       <div>
@@ -167,14 +201,18 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
 
       <div className="flex items-center gap-4 py-2">
         <div className="h-px flex-1 bg-white/10" />
+
         <span className="text-xs text-slate-500">
           o continúa con
         </span>
+
         <div className="h-px flex-1 bg-white/10" />
       </div>
 
       <button
         type="button"
+        onClick={handleGoogleLogin}
+        disabled={googleLoading}
         className="
           flex h-11 w-full items-center justify-center gap-3
           rounded-xl border border-white/10
@@ -182,12 +220,17 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           text-sm text-slate-300
           transition
           hover:bg-white/10
+          disabled:cursor-not-allowed
+          disabled:opacity-60
         "
       >
         <span className="text-lg font-bold">
           <span className="text-blue-400">G</span>
         </span>
-        Continuar con Google
+
+        {googleLoading
+          ? "Conectando con Google..."
+          : "Continuar con Google"}
       </button>
 
       <p className="pt-2 text-center text-sm text-slate-500">

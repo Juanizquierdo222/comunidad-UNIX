@@ -6,7 +6,13 @@
 
 export type UserRole = "alumno" | "instructor" | "externo" | "expositor" | "admin";
 
-export type InstitutionType = "UT" | "UNICARIBE" | "POLITECNICO" | "OTRA" | "SIN_INSTITUCION";
+export type InstitutionType =
+  | "ITC"
+  | "UT"
+  | "UNICARIBE"
+  | "POLITECNICO"
+  | "OTRA"
+  | "SIN_INSTITUCION";
 
 export type AcademicDegree = "MTRO" | "DR" | "ING" | "LIC" | "OTRO";
 
@@ -118,7 +124,14 @@ export type Database = {
         Relationships: [];
       };
     };
-    Functions: Record<string, never>;
+       Functions: {
+      set_onboarding_role: {
+        Args: {
+          requested_role: UserRole;
+        };
+        Returns: undefined;
+      };
+    };
     Enums: {
       user_role: UserRole;
       institution_type: InstitutionType;
