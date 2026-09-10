@@ -71,7 +71,7 @@ export default function CoursesCatalog({ courses }: { courses: Course[] }) {
 
       return matchesSearch && matchesCategory && matchesLevel;
     });
-  }, [search, category, level]);
+  }, [courses, search, category, level]);
 
   function clearFilters() {
     setSearch("");

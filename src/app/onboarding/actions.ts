@@ -47,10 +47,21 @@ export async function completeOnboardingAction(_prevState: ActionState, formData
   }
 
   try {
-    await createRoleProfile(supabase, user.id, parsed.data);
-  } catch (error) {
-    return { status: "error", message: toFriendlyErrorMessage(error) };
+  const { error: roleError } = await supabase.rpc("set_onboarding_role", {
+    requested_role: parsed.data.role,
+  });
+
+  if (roleError) {
+    throw roleError;
   }
 
-  redirect("/dashboard");
+  await createRoleProfile(supabase, user.id, parsed.data);
+} catch (error) {
+  return {
+    status: "error",
+    message: toFriendlyErrorMessage(error),
+  };
+}
+
+redirect("/dashboard");
 }

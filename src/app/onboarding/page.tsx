@@ -10,10 +10,16 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const ONBOARDING_ROLES: UserRoleInput[] = ["alumno", "instructor", "externo", "expositor"];
+const ONBOARDING_ROLES: UserRoleInput[] = [
+  "alumno",
+  "instructor",
+  "externo",
+  "expositor",
+];
 
 export default async function OnboardingPage() {
   const supabase = await createSupabaseServerClient();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -37,16 +43,31 @@ export default async function OnboardingPage() {
   }
 
   if (!ONBOARDING_ROLES.includes(profile.role as UserRoleInput)) {
-    // Rol administrativo u otro caso especial: no requiere onboarding de rol.
+    // Rol administrativo u otro caso especial.
     redirect("/dashboard");
   }
+
+  const metadataRole = user.user_metadata?.role as
+    | UserRoleInput
+    | undefined;
+
+  const canChooseRole =
+    !metadataRole || !ONBOARDING_ROLES.includes(metadataRole);
 
   return (
     <AuthShell
       title="Completa tu registro"
-      description={`Confirmamos tu correo. Ahora completa los datos de tu perfil de ${profile.role}.`}
+      description={
+        canChooseRole
+          ? "Selecciona tu tipo de usuario y completa los datos de tu perfil."
+          : `Confirmamos tu correo. Ahora completa los datos de tu perfil de ${profile.role}.`
+      }
     >
-      <OnboardingForm role={profile.role as UserRoleInput} fullName={profile.full_name} />
+      <OnboardingForm
+        role={profile.role as UserRoleInput}
+        fullName={profile.full_name}
+        canChooseRole={canChooseRole}
+      />
     </AuthShell>
   );
 }

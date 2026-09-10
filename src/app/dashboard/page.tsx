@@ -9,7 +9,7 @@ import {
   Code2,
   GraduationCap,
   MessageCircle,
-  Play,
+  
   Plus,
   Terminal,
   Trophy,
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
               Comunidad UNIX ITC
             </p>
             <h1 className="text-3xl font-bold tracking-tight">
-              Hola, {firstName} 👋
+              Hola, {firstName}
             </h1>
             <p className="mt-2 text-sm text-slate-400">
               {isTeacher

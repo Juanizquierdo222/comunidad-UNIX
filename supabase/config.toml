@@ -26,3 +26,10 @@ enable_signup = true
 enable_signup = true
 double_confirm_changes = true
 enable_confirmations = true
+
+
+[auth.external.google]
+enabled = true
+client_id = "264446420040-hqkmrd2ipfo0aa2jmo2dtuap6tthsvf6.apps.googleusercontent.com"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET)"
+skip_nonce_check = false

@@ -253,19 +253,46 @@ export function RegistrationForm() {
         </div>
 
         <div>
-          <Label htmlFor="email" required>
-            Correo electrónico
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="tucorreo@ejemplo.com"
-            autoComplete="email"
-            required
-          />
-          <FieldError id="email-error" message={fieldError(state.fieldErrors, "email")} />
-        </div>
+  <Label htmlFor="email" required>
+    Correo electrónico
+  </Label>
+
+  <Input
+    id="email"
+    name="email"
+    type="email"
+    placeholder={
+      role === "alumno"
+        ? "correo@institucion.edu.mx"
+        : "tucorreo@ejemplo.com"
+    }
+    autoComplete="email"
+    required
+  />
+
+  {role === "alumno" && (
+    <p className="mt-1 text-xs text-surface-500">
+      Preferentemente utiliza tu correo institucional.
+    </p>
+  )}
+
+  {role === "instructor" && (
+    <p className="mt-1 text-xs text-surface-500">
+      Puedes utilizar tu correo institucional o profesional.
+    </p>
+  )}
+
+  {(role === "externo" || role === "expositor") && (
+    <p className="mt-1 text-xs text-surface-500">
+      Puedes utilizar tu correo personal o profesional.
+    </p>
+  )}
+
+  <FieldError
+    id="email-error"
+    message={fieldError(state.fieldErrors, "email")}
+  />
+</div>
 
         <div>
           <Label htmlFor="password" required>
