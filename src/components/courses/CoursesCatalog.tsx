@@ -228,7 +228,7 @@ export default function CoursesCatalog({ courses }: { courses: Course[] }) {
                         </span>
                         <span className="flex items-center gap-1.5">
                           <BookOpen className="h-4 w-4" />
-                          {course.lessons} lecciones
+                          {course.lessons} {course.lessons === 1 ? "lección" : "lecciones"}
                         </span>
                       </div>
 

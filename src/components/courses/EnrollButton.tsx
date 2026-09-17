@@ -4,8 +4,13 @@ import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   enrollInCourse,
-  initialEnrollmentState,
+  type EnrollmentState,
 } from "@/app/dashboard/courses/actions";
+
+const initialEnrollmentState: EnrollmentState = {
+  error: null,
+  success: false,
+};
 
 export default function EnrollButton({
   courseId,
